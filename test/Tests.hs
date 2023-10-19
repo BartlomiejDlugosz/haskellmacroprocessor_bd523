@@ -20,6 +20,8 @@ lookUpTests = [ lookUp "A" [("A", 8), ("B",9), ("C",5), ("A",7)] --> [8,7]
               , lookUp "a" ([] :: [(String, Int)])               --> []
               , lookUp "a" [("a", 9)]                            --> [9]
               , lookUp "a" [("b", 9)]                            --> []
+              , lookUp "z" [("z", 10), ("hello", 11), ("zebra", 9)] --> [10]
+              , lookUp "zebra" [("z", 10), ("hi", 11), ("zebra", 9)] --> [9]
               ]
 
 splitTextTests :: [Assertion]
@@ -27,6 +29,7 @@ splitTextTests = [ splitText " .," "A comma, then some words." --> (" ,   .", ["
                  , splitText "" ""                             --> ("", [""])
                  , splitText "." "A.B"                         --> (".", ["A","B"])
                  , splitText " " " A"                          --> (" ", ["", "A"])
+                 , splitText " .!" "Hello there! This is computer science." --> (" !    .", ["Hello", "there", "", "This", "is", "computer", "science", ""])
                  ]
 
 combineTests :: [Assertion]
@@ -34,6 +37,7 @@ combineTests = [ combine " ,   ." ["A","comma","","then","some","words",""] --> 
                , combine "" [""]                                            --> [""]
                , combine "." ["A","B"]                                      --> ["A",".","B"]
                , combine " " ["", "A"]                                      --> [""," ","A"]
+               , combine " !    ." ["Hello", "there", "", "This", "is", "computer", "science", ""] --> ["Hello", " ", "there", "!", "", " ", "This", " ", "is", " ", "computer", " ", "science", ".", ""]
                ]
 
 getKeywordDefsTests :: [Assertion]
@@ -45,6 +49,8 @@ getKeywordDefsTests = [ getKeywordDefs ["$rule Reproduce this precisely -- or el
                       , getKeywordDefs ["$$ something to think about"]                 --> [("$$","something to think about")]
                       , getKeywordDefs ["$ meanie!"]                                   --> [("$","meanie!")]
                       , getKeywordDefs ["$var  Tristan Allwood"]                       --> [("$var", " Tristan Allwood")]
+                      , getKeywordDefs ["$name Bartlomiej Dlugosz", "$age 18", "$price $15"] --> [("$name", "Bartlomiej Dlugosz"), ("$age", "18"), ("$price", "$15")]
+                      , getKeywordDefs ["$ $15"] --> [("$", "$15")]
                       ]
 
 expandTests :: [Assertion]

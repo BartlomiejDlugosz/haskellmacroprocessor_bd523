@@ -21,9 +21,8 @@ lookUp :: String -> [(String, a)] -> [a]
 lookUp s arr = [y | (x,y) <- arr, x == s]
 
 {-|
-This function will break up a string with some given separator
-characters, returning both the list of separators found between
-each "word" and the words themselves.
+This function gets the next word and returns the remeinder. 
+E.g. "Hello there world!" -> ("Hello", "there world!")
 -}
 getNextWord :: [Char] -> String -> (String, String)
 getNextWord _ "" = ("", "")
@@ -33,6 +32,10 @@ getNextWord sep (x:xs)
         where
               (wrd, rem) = getNextWord sep xs
 
+{-|
+This function aplies the getNextWord recursively to split the entire
+text into words.
+-}
 splitIntoWords :: [Char] -> String -> [String]
 splitIntoWords _ "" = [""]
 splitIntoWords sep str
@@ -41,6 +44,11 @@ splitIntoWords sep str
        where
               (wrd, rem) = getNextWord sep str
 
+{-|
+This function will break up a string with some given separator
+characters, returning both the list of separators found between
+each "word" and the words themselves.
+-}
 splitText :: [Char] -- ^ the separators to split on
           -> String -- ^ the string to split
           -> ([Char], [String])
